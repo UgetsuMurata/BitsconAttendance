@@ -25,7 +25,7 @@ public class adminController {
         return ResponseEntity.ok(attendeeServices.viewAllAttendance());
     }
 
-    @GetMapping("/attendance/view/filtered")
+    @PostMapping("/attendance/view/filtered")
     public ResponseEntity<List<Attendee>> getFilteredAttendance(@RequestBody Filter filter) {
         Filter newFilter = new Filter();
         newFilter.setDate("SELECT_ALL".equals(filter.getDate()) ? null : filter.getDate());
