@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/public")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class publicController {
     private final AttendeeServices attendeeServices;
 

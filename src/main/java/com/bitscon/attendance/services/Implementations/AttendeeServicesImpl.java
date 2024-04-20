@@ -79,26 +79,21 @@ public class AttendeeServicesImpl implements AttendeeServices {
     @Override
     public List<Attendee> viewFilteredAttendance(String schoolFilter, String dateFilter) {
         Date formattedCurrentDate;
-        List<com.bitscon.attendance.model.Date> listedDate = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        if (dateFilter != null) {
-            try {
-                formattedCurrentDate = formatter.parse(dateFilter);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-            com.bitscon.attendance.model.Date findDate = dateRepository.findByDate(formattedCurrentDate);
-            listedDate.add(findDate);
-            if (schoolFilter != null) {
-                return attendeeRepository.findAllBySchoolAndDateIdIn(schoolFilter, listedDate);
-            } else {
-                return attendeeRepository.findAllByDateIdIn(listedDate);
-            }
+        try {
+            formattedCurrentDate = formatter.parse(dateFilter);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
-        else if (schoolFilter != null) {
+        com.bitscon.attendance.model.Date findDate = dateRepository.findByDate(formattedCurrentDate);
+        if (dateFilter != null && schoolFilter != null) {
+            return attendeeRepository.findAllBySchoolAndDateId(schoolFilter, findDate);
+        } else if (dateFilter == null && schoolFilter != null) {
             return attendeeRepository.findAllBySchool(schoolFilter);
+        } else if (dateFilter != null && schoolFilter == null) {
+            return attendeeRepository.findAllByDate(formattedCurrentDate);
         } else {
-            return attendeeRepository.findAll();
+            return null;
         }
     }
 }
