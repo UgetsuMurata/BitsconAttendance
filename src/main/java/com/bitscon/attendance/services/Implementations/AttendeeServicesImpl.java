@@ -78,6 +78,22 @@ public class AttendeeServicesImpl implements AttendeeServices {
 
     @Override
     public List<Attendee> viewFilteredAttendance(String schoolFilter, String dateFilter) {
-        return attendeeRepository.findAllBySchoolAndDateId(schoolFilter, new com.bitscon.attendance.model.Date());
+        Date formattedCurrentDate;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            formattedCurrentDate = formatter.parse(dateFilter);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        com.bitscon.attendance.model.Date findDate = dateRepository.findByDate(formattedCurrentDate);
+        if (dateFilter != null && schoolFilter != null) {
+            return attendeeRepository.findAllBySchoolAndDateId(schoolFilter, findDate);
+        } else if (dateFilter == null && schoolFilter != null) {
+            return attendeeRepository.findAllBySchool(schoolFilter);
+        } else if (dateFilter != null && schoolFilter == null) {
+            return attendeeRepository.findAllByDate(formattedCurrentDate);
+        } else {
+            return null;
+        }
     }
 }

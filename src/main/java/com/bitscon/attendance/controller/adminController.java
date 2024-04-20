@@ -1,6 +1,7 @@
 package com.bitscon.attendance.controller;
 
 
+import com.bitscon.attendance.dto.Filter;
 import com.bitscon.attendance.model.Attendee;
 import com.bitscon.attendance.services.AttendeeServices;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class adminController {
     }
 
     @GetMapping("/attendance/view/filtered")
-    public ResponseEntity<List<Attendee>> getFilteredAttendance(@RequestBody String school, @RequestBody String date){
-        return ResponseEntity.ok(attendeeServices.viewFilteredAttendance(school, date));
+    public ResponseEntity<List<Attendee>> getFilteredAttendance(@RequestBody Filter filter){
+        return ResponseEntity.ok(attendeeServices.viewFilteredAttendance(filter.getSchool(), filter.getDate()));
     }
 }
