@@ -17,6 +17,8 @@ public class publicController {
     @PostMapping("/attendance")
     public ResponseEntity<Attendee> addAttendee(@RequestBody Attendee attendee){
         if (!RequestVerification.validAttendee(attendee)) return new ResponseEntity<>(attendee, HttpStatus.BAD_REQUEST);
-        return ResponseEntity.ok(attendeeServices.AddAttendance(attendee));
+        Attendee newAttendee = attendeeServices.AddAttendance(attendee);
+        if (newAttendee == null) return new ResponseEntity<>(attendee, HttpStatus.CONFLICT);
+        return ResponseEntity.ok(newAttendee);
     }
 }
